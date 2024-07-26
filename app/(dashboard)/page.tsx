@@ -9,7 +9,7 @@ import { HOST } from '@/config'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { Store } from '@/types'
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardPage() {
   const setUser = useUserStore((state) => state.setUser)
   const setSelectedStore = useSelectedStore((state) => state.setSelectedStore)
   const storeModal = useStoreModal()
@@ -49,6 +49,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }, [setUser, setSelectedStore, storeModal, storedStore, setStoredStore])
 
   return (
-    <><h1>main</h1></>
+    <div>
+      <h1>Dashboard</h1>
+      {/* Add your dashboard content here */}
+    </div>
   )
 }
