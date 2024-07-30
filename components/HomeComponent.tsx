@@ -8,17 +8,19 @@ import { StoreModal } from "@/components/modals/storeModal"
 import { HOST } from '@/config'
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { Store } from '@/types'
+import { useRouter } from 'next/navigation'
 
-export default function DashboardPage() {
+export default function HomeComponent({ children }: { children: React.ReactNode }) {
   const setUser = useUserStore((state) => state.setUser)
   const setSelectedStore = useSelectedStore((state) => state.setSelectedStore)
   const storeModal = useStoreModal()
   const [storedStore, setStoredStore] = useLocalStorage<Store | null>('selectedStore', null)
+  const router = useRouter()
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`${HOST}/user`, {
+        const response = await fetch(`${HOST}/admin`, {
           credentials: 'include',
         })
 
@@ -28,30 +30,18 @@ export default function DashboardPage() {
 
         const userData = await response.json()
         setUser(userData.data)
+        console.log(userData.data)
+        router.push('/dashboard')
 
-        if (userData.data.stores && userData.data.stores.length > 0) {
-          if (storedStore) {
-            setSelectedStore(storedStore)
-          } else {
-            const firstStore = userData.data.stores[0]
-            setSelectedStore(firstStore)
-            setStoredStore(firstStore)
-          }
-        } else {
-          storeModal.onOpen()
-        }
       } catch (error) {
         console.error('Error fetching user:', error)
       }
     }
 
     fetchUser()
-  }, [setUser, setSelectedStore, storeModal, storedStore, setStoredStore])
+  }, [setUser, setSelectedStore, storeModal, storedStore, setStoredStore, router])
 
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      {/* Add your dashboard content here */}
-    </div>
-  )
+  return <>
+    {children}
+  </>
 }

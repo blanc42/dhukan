@@ -29,6 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Store } from "@/types"
+import { HOST } from "@/config"
 
 const formSchema = z.object({
   name: z.string().min(1, "Store name is required"),
@@ -52,10 +53,12 @@ export const StoreModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true)
-      const response = await fetch("/api/stores", {
+// process.env.NEXT_PUBLIC_API_URL}/api/stores
+      const response = await fetch(`${HOST}/stores`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
+        credentials: "include",
       })
 
       const { message , error, data } : { message: string, error: string, data: Store } = await response.json()
@@ -72,6 +75,7 @@ export const StoreModal = () => {
         title: "Store created",
         description: `${values.name} has been created successfully.`,
       })
+      router.push("/dashboard")
     } catch (error) {
       toast({
         title: "Error",

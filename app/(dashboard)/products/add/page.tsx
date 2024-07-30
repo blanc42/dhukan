@@ -6,8 +6,10 @@ import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useEffect, useState } from 'react'
-import { X, Plus, Trash } from 'lucide-react'
+import { X, Plus, Trash, Upload } from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
 
 type VariantOption = {
   value: string
@@ -56,6 +58,11 @@ const fetchVariants = async (): Promise<Variant[]> => {
 }
 
 const formSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  description: z.string(),
+  isFeatured: z.boolean(),
+  isArchived: z.boolean(),
+  categoryId: z.number().positive('Category ID is required'),
   items: z.array(z.object({
     sku: z.string().min(1, 'SKU is required'),
     quantity: z.number().min(0, 'Quantity must be 0 or greater'),
@@ -78,6 +85,11 @@ export default function VariantSelector() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: '',
+      description: '',
+      isFeatured: false,
+      isArchived: false,
+      categoryId: 0,
       items: [],
     },
   })
@@ -173,26 +185,128 @@ export default function VariantSelector() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Product Options</h1>
+      <h1 className="text-2xl font-bold mb-4">Add Product</h1>
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit((data) => console.log(data))}>
-      <div className="mb-4">
-        <FormItem>
-          <FormLabel>Option title*</FormLabel>
-          <Select onValueChange={handleSelectVariant} value={selectedVariant} disabled={allVariantsSelected}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a variant" />
-            </SelectTrigger>
-            <SelectContent>
-              {variants.map((variant) => (
-                <SelectItem key={variant.id} value={variant.id}>
-                  {variant.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </FormItem>
-      </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="mt-4">
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex-1 md:w-1/3">
+              <FormItem>
+                <FormLabel>Image Upload</FormLabel>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center">
+                  <Upload className="h-12 w-12 text-gray-400" />
+                  <p className="mt-2 text-sm text-gray-600">Drag and drop or click to upload</p>
+                </div>
+              </FormItem>
+            </div>
+          </div>
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Select onValueChange={(value) => field.onChange(Number(value))} value={field.value.toString()}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="1">Electronics</SelectItem>
+                    <SelectItem value="2">Clothing</SelectItem>
+                    <SelectItem value="3">Books</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-col md:flex-row gap-4">
+            <FormField
+              control={form.control}
+              name="isFeatured"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Featured
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isArchived"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Archived
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+          <h2 className="text-xl font-bold mt-6 mb-4">Product Options</h2>
+          <div className="mb-4">
+            <FormItem>
+              <FormLabel>Option title*</FormLabel>
+              <Select onValueChange={handleSelectVariant} value={selectedVariant} disabled={allVariantsSelected}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a variant" />
+                </SelectTrigger>
+                <SelectContent>
+                  {variants.map((variant) => (
+                    <SelectItem key={variant.id} value={variant.id}>
+                      {variant.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          </div>
           <div className="mt-4">
             {selectedVariants.map((variant) => (
               <div key={variant.id} className="mt-2 border p-4 rounded">

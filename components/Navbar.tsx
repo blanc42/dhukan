@@ -6,39 +6,42 @@ import Link from 'next/link'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { fetchStores } from '@/lib/api/fetchStores'
-import { Store } from '@/types' // Import the Store type from types.ts
+import { Button } from '@/components/ui/button'
+import { useSelectedStore } from '@/store/userSelectedStore'
+import { useUserStore } from '@/store/userUserStore'
+import { Store } from '@/types'
 
 export default function Navbar() {
-  const [stores, setStores] = useState<Store[]>([])
-  const [selectedStore, setSelectedStore] = useState<string>('')
+  const { selectedStore, setSelectedStore } = useSelectedStore()
+  const { user } = useUserStore()
 
   useEffect(() => {
-    const loadStores = async () => {
-      try {
-        const fetchedStores = await fetchStores()
-        setStores(fetchedStores)
-      } catch (error) {
-        console.error('Failed to fetch stores:', error)
-      }
+    if (user?.stores && user.stores.length > 0 && !selectedStore) {
+      setSelectedStore(user.stores[0])
     }
-    loadStores()
-  }, [])
+  }, [user, selectedStore, setSelectedStore])
+
+  const handleStoreChange = (storeId: string) => {
+    const newSelectedStore = user?.stores.find(store => store.ID === parseInt(storeId)) || null
+    setSelectedStore(newSelectedStore)
+  }
 
   return (
     <nav className="flex items-center justify-between p-4 bg-background border-b">
       <div className="flex items-center space-x-4">
         {/* Logo */}
-        <Image src="/logo.png" alt="Logo" width={40} height={40} className='rounded-full border border-black' />
+        <Image src="/logo.png" alt="Logo" width={60} height={60} className='rounded-full' />
 
         {/* Store Selector */}
-        <Select onValueChange={setSelectedStore} value={selectedStore}>
+        <Select onValueChange={handleStoreChange} value={selectedStore?.ID.toString() || ''}>
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Select a store" />
+            <SelectValue placeholder="Select a store">
+              {selectedStore?.name || "Select a store"}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
-            {stores.map((store) => (
-              <SelectItem key={store.id} value={store.id}>
+            {user?.stores.map((store) => (
+              <SelectItem key={store.ID} value={store.ID.toString()}>
                 {store.name}
               </SelectItem>
             ))}
@@ -54,6 +57,25 @@ export default function Navbar() {
         <Link href="/variants" className="text-sm font-medium">Variants</Link>
       </div>
 
+<div className='flex items-center space-x-4'>
+
+      {/* Create Dropdown */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className="flex items-center space-x-2">
+            <span>+</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link href="/products/add">Create Product</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/categories/add">Create Category</Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       {/* Profile Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -63,8 +85,6 @@ export default function Navbar() {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-
-            
           <DropdownMenuItem asChild>
             <Link href="/profile">Profile</Link>
           </DropdownMenuItem>
@@ -79,6 +99,8 @@ export default function Navbar() {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+</div>
+
     </nav>
   )
 }

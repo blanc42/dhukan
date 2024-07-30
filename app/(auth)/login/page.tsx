@@ -33,8 +33,8 @@ export default function LoginPage() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'baduser23@example.com',
+      password: 'badpassword',
     },
   })
 
@@ -46,14 +46,18 @@ export default function LoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(data),
       })
-
+      
       if (!response.ok) {
+        console.log("response not ok")
         throw new Error('Login failed')
       }
-
+      
+      // console.log(data)
       const userData: { data: User } = await response.json()
+      console.log("userData", userData)
       setUser(userData.data)
       
       if (userData.data.stores && userData.data.stores.length > 0) {
@@ -66,6 +70,7 @@ export default function LoginPage() {
         title: "Login successful",
         description: "You have been logged in.",
       })
+      console.log("gonna push to dashboard")
       router.push('/dashboard')
     } catch (error) {
       toast({
@@ -73,6 +78,7 @@ export default function LoginPage() {
         description: "There was a problem logging in.",
         variant: "destructive",
       })
+      console.log("error", error)
     } finally {
       setIsLoading(false)
     }

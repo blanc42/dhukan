@@ -33,7 +33,7 @@ export type Category = {
 };
 
 export type Store = {
-  id: string;
+  ID: number;
   name: string;
   description: string
   admin_id: number

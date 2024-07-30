@@ -1,3 +1,4 @@
+import HomeComponent from "@/components/HomeComponent";
 import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -17,7 +18,9 @@ export default function AuthLayout({
     return (
         <>
             <Navbar />
-            <main>{children}</main>
+           <div className="px-2 md:px-[10%] w-full">
+            {children}
+           </div>
         </>
     );
 }

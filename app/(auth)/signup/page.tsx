@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { toast } from "@/components/ui/use-toast"
 import { useRouter } from 'next/navigation'
+import { HOST } from '@/config'
 
 const signupSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters'),
@@ -29,18 +30,29 @@ export default function SignupPage() {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      username: 'baduser',
+      email: 'baduser@example.com',
+      password: 'badpassword',
+      confirmPassword: 'badpassword',
     },
   })
 
   async function onSubmit(data: SignupFormValues) {
     setIsLoading(true)
     try {
-      // Here you would typically send the data to your API
-      console.log(data)
+      const response = await fetch(`${HOST}/signup`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        throw new Error('Signup failed')
+      }
+
       toast({
         title: "Account created successfully",
         description: "You can now log in with your new account.",
