@@ -17,8 +17,8 @@ const categories: Category[] = [
 ];
 
 const stores: Store[] = [
-  { id: '1', name: 'Store 1', description: 'Description for Store 1', admin_id: 1 },
-  { id: '2', name: 'Store 2', description: 'Description for Store 2', admin_id: 2 },
+  { ID: 1, name: 'Store 1', description: 'Description for Store 1', admin_id: 1 },
+  { ID: 2, name: 'Store 2', description: 'Description for Store 2', admin_id: 2 },
 ];
 
 const variants: Variant[] = [
@@ -298,7 +298,7 @@ const ProductForm: React.FC = () => {
                 </FormControl>
                 <SelectContent>
                   {stores.map((store) => (
-                    <SelectItem key={store.id} value={store.id}>
+                    <SelectItem key={store.ID} value={store.ID.toString()}>
                       {store.name}
                     </SelectItem>
                   ))}
