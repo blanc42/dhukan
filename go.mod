@@ -5,7 +5,7 @@ go 1.22.4
 toolchain go1.22.5
 
 require (
-	github.com/blanc42/ecms v0.0.0-20240731073420-b06f06fe3318
+	github.com/blanc42/ecms v0.0.0-20240731083501-c470e0debdbd
 	github.com/gin-gonic/gin v1.10.0
 )
 
