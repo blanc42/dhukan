@@ -1,10 +1,14 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/blanc42/ecms/pkg/routes"
+	"github.com/gin-gonic/gin"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello from the Vercel Go API!")
+func MainRouter(w http.ResponseWriter, r *http.Request) {
+	router := gin.Default()
+	routes.SetupRouter(router)
+	router.Run()
 }
