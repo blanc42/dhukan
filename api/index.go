@@ -10,5 +10,5 @@ import (
 func MainRouter(w http.ResponseWriter, r *http.Request) {
 	router := gin.Default()
 	routes.SetupRouter(router)
-	router.Run()
+	router.ServeHTTP(w, r)
 }

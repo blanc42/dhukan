@@ -1,5 +1,7 @@
 github.com/blanc42/ecms v0.0.0-20240731055833-02316bb13360 h1:HCQWmsbAGA9pXHIl4vi8ejbg14GHWiZBuT7tymzenLU=
 github.com/blanc42/ecms v0.0.0-20240731055833-02316bb13360/go.mod h1:z/NIikp9EH9ZobyQ6AsvjUjN1r2ZzGDmoJE0iX+nNHo=
+github.com/blanc42/ecms v0.0.0-20240731060918-6bf6dbfdacc3 h1:qUpYZ9wnuNqgIZMcn8kjNU/kV9+74U5rOncighke75A=
+github.com/blanc42/ecms v0.0.0-20240731060918-6bf6dbfdacc3/go.mod h1:z/NIikp9EH9ZobyQ6AsvjUjN1r2ZzGDmoJE0iX+nNHo=
 github.com/bytedance/sonic v1.11.6 h1:oUp34TzMlL+OY1OUWxHqsdkgC/Zfc85zGqw9siXjrc0=
 github.com/bytedance/sonic v1.11.6/go.mod h1:LysEHSvpvDySVdC2f87zGWf6CIKJcAvqab1ZaiQtds4=
 github.com/bytedance/sonic/loader v0.1.1 h1:c+e5Pt1k/cy5wMveRDyk2X4B9hF4g7an8N3zCYjJFNM=

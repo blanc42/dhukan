@@ -3,7 +3,7 @@ module github.com/blanc42/ecms-ui
 go 1.22.5
 
 require (
-	github.com/blanc42/ecms v0.0.0-20240731055833-02316bb13360
+	github.com/blanc42/ecms v0.0.0-20240731060918-6bf6dbfdacc3
 	github.com/gin-gonic/gin v1.10.0
 )
 
