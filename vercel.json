@@ -7,7 +7,8 @@
     "build": {
       "env": {
         "GO_BUILD_FLAGS": "-ldflags '-s -w'"
-      }
+      },
+      "command": "go get -u github.com/blanc42/ecms@latest && go mod tidy && go build"
     },
     "rewrites": [
       {
